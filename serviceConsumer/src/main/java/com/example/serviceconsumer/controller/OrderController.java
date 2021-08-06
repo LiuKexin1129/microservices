@@ -13,9 +13,8 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping("/{id}")
-    public Order selectOrderById(@PathVariable("id") String id) {
+    public Order selectOrderById(@PathVariable("id") Integer id) {
         return orderService.selectOrderById(id);
-
     }
 
 }

@@ -29,9 +29,9 @@ public class OrderServiceImpl implements OrderService {
     private LoadBalancerClient loadBalancerClient;
 
     @Override
-    public Order selectOrderById(String id) {
+    public Order selectOrderById(Integer id) {
         return new Order(id, "order-001", "China", 31994,
-                selectProductListByDiscoveryClient());
+                selectProductListByLoadBalancerAnnotation());
     }
 
     private List<Product> selectProductListByDiscoveryClient() {
@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
 
         ServiceInstance si = serviceInstances.get(0);
         sb = new StringBuffer();
-        sb.append("http://" + si.getHost() + ":" + si.getPort() + "/product/list");
+        sb.append("http://" + si.getHost() + ":" + si.getPort() + "/product");
         System.out.println(sb.toString());
 
         ResponseEntity<List<Product>> response = restTemplate.exchange(
@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
         return response.getBody();
     }
 
-    private List<Product> selectProductByLoadBalancerClient() {
+    private Product selectProductByLoadBalancerClient() {
         StringBuffer sb = null;
 
         ServiceInstance si = loadBalancerClient.choose("serviceProvider");
@@ -69,13 +69,13 @@ public class OrderServiceImpl implements OrderService {
             return null;
 
         sb = new StringBuffer();
-        sb.append("http://" + si.getHost() + ":" + si.getPort() + "/product/list");
+        sb.append("http://" + si.getHost() + ":" + si.getPort() + "/product");
 
-        ResponseEntity<List<Product>> response = restTemplate.exchange(
+        ResponseEntity<Product> response = restTemplate.exchange(
                 sb.toString(),
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<Product>>(){}
+                new ParameterizedTypeReference<Product>(){}
         );
         return response.getBody();
 
@@ -83,13 +83,13 @@ public class OrderServiceImpl implements OrderService {
 
     private List<Product> selectProductListByLoadBalancerAnnotation() {
         ResponseEntity<List<Product>> response = restTemplate.exchange(
-                "http://serviceProvider/product/list",
+                "http://service-provider/product",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Product>>(){}
         );
+        System.out.println("http://service-provider/product");
         return response.getBody();
     }
-
 
 }

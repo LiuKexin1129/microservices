@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Order implements Serializable {
 
-    private String id;
+    private Integer id;
     private String orderNo;
     private String orderAddress;
     private Integer totalPrice;
