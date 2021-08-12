@@ -1,0 +1,25 @@
+server:
+  port: 9090 #服务端口
+spring:
+  application:
+    name: service-consumer #服务名称
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8762/eureka/
+    registry-fetch-interval-seconds: 10
+#  instance:
+#    prefer-ip-address: true #使用ip进行注册
+#    instance-id: ${spring.cloud.client.ip-address}:${server.port} #向注册中心注册服务ID
+#    lease-renewal-interval-in-seconds: 5 #发送心跳间隔时间 秒
+#    lease-expiration-duration-in-seconds: 10 # 服务续约时间 10秒内没有发送心跳（宕机）
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000
